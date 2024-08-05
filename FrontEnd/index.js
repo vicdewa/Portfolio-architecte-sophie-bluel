@@ -1,14 +1,17 @@
 //Fonction qui gère l'affichage de la galerie de projet//
+const gallery = document.querySelector('.gallery');
+var works=[];
 async function fetchAndDisplayGallery() {
 // Suppresion du HTML contenu dans la balise "gallery" pour la vider et la remplacer par le contenu généré de manière dynamique//   
-    const gallery = document.querySelector('.gallery');
-            gallery.innerHTML = '';
 //Appel API pour récupérer les projets//   
         const responseAPI = await fetch('http://localhost:5678/api/works');
-        const works = await responseAPI.json();
-        console.log(works)
+        works = await responseAPI.json();
+        displayGallery(works)
+        console.log(works)}
+        function displayGallery(categoryWorks){
+                gallery.innerHTML = '';
 // Ajout dynamique des projets récupérés dans "/works"// 
-        works.forEach((i) => { 
+        categoryWorks.forEach((i) => { 
 // Création des éléments HTML correspondants pour chacun des projets de "/works"//   
         const workCard = document.createElement('figure'); 
         const workImg = document.createElement('img');
@@ -36,6 +39,10 @@ async function fetchAndDisplayGallery() {
             menuFiltres.innerHTML = '';
         const input = document.createElement('button'); 
             input.id = 0;
+            input.addEventListener("click", function(){
+                console.log('Le bouton "Tous" a été cliqué.');
+                filterProjects('all');
+            });
             input.innerHTML = 'Tous';
 // Rattachement des éléments HTML "input" au parent//  
         menuFiltres.appendChild(input);
@@ -45,6 +52,10 @@ async function fetchAndDisplayGallery() {
         const input = document.createElement('button'); 
             input.id = category.id;
             input.innerHTML = category.name;
+            input.addEventListener("click", function(){
+                console.log('Le bouton '+ category.name +' a été cliqué.');
+                filterProjects(category.id);
+            });
 // Rattachement des éléments HTML "input" au parent//  
         menuFiltres.appendChild(input);
         })};
@@ -52,12 +63,18 @@ async function fetchAndDisplayGallery() {
         fetchAndDisplayFilters()
 
 
-// Sélectionner le bouton par son ID
-const allFilter = document.getElementById('0');
-// Vérifier si l'élément existe avant d'ajouter l'event listener
-if (allFilter) {
-    allFilter.addEventListener("click", function(){
-        console.log('Le bouton "Tous" a été cliqué.');
-        fetchAndDisplayGallery();
-    });
-}
+//Gestion des filtres par categories >> Mail de Nicolas//
+function filterProjects(category) {
+//Réalisation d'une boucle sur l'ensemble des projets pour vérifier la catégorie à laquelle ils appartiennent//  
+        var worksTemp=[];
+        console.log(category)
+        console.log(works)
+        works.forEach(project => {
+//Récupération de la catégorie de chaque projet dans le HTML//Changer les noms des catégories, id ou name?
+        const projectCategory = project.categoryId;
+        if (category === 'all' || projectCategory === category) {
+                worksTemp.push(project)
+        }
+        });
+        displayGallery(worksTemp)
+        }

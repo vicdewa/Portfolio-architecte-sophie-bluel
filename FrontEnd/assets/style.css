@@ -238,6 +238,8 @@ input[type="submit"]:hover{
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
+	padding: 10px;
+	background-color: blue;
 }
 
