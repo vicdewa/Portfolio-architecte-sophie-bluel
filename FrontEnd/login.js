@@ -1,79 +1,49 @@
-//Mail de Nicolas//
+//Consigne: créer un formulaire de connexion fonctionnel avec une redirection vers la page d’accueil quand la connexion est confirmée/ un message d’erreur quand les informations utilisateur & mot de passe ne sont pas correctes.//
 
-//Déclaration des variables de la fenêtre de connexion log-in: email, mot de passe, se connecter//
-const emailInput = document.querySelector('#email');
-const passwordInput = document.querySelector('#password');
-const submitButton = document.querySelector('#login-submit');
+//email: sophie.bluel@test.tld password: S0phie//
 
-//Définir les fonctions hideValidationError, showValidationError
-
-//Ajout d'un event listener sur le champ de saisie de l'adresse e-mail et déclenchement d'une fonction de validation//
-emailInput.addEventListener('input', function () {
-    hideValidationError(emailInput, false);
-    if (emailInput.value.trim() === '') {
-        showValidationError(emailInput, false);
-    } else if (!validateEmail(emailInput.value.trim())) {
-        showValidationError(emailInput, false, 'Format incorrect');
-    } else {
-        hideValidationError(emailInput, false);
-    }
-});
-
-//Ajout d'un event listener sur le champ de saisie du mot de passe et déclenchement d'une fonction de validation//
-passwordInput.addEventListener('input', function () {
-    if (passwordInput.value === '') {
-        showValidationError(passwordInput, false);
-    } else {
-        hideValidationError(passwordInput, false);
-    }
-});
-
-//Ajout d'un event listener au clic sur le bouton "se connecter" et déclenchement d'une fonction (?)//
-submitButton.addEventListener('click', async (e) => {
-    checkLoginFormValidity(emailInput, passwordInput);
-   
-    e.preventDefault();
-
-    if(!emailInput.classList.contains("error-input") && !passwordInput.classList.contains("error-input")){
-       
-        var email = emailInput.value;
-        var password = passwordInput.value;
-   
-        if(!validateEmail(email)) {
-            showValidationError(emailInput, false, 'Format incorrect');
-            return;
-        }
-   
-        var data = {
-            email: email,
-            password: password
-        };
-   
-        fetch("http://localhost:5678/api/users/login", {
-            method: "POST",
+//Sélection et déclaration des éléments du DOM//
+const loginForm = document.getElementById('loginForm');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const errorMessage = document.getElementById('error-message');
+//Ajout d'un event listener sur le formulaire lors du clic sur le bouton submit//
+loginForm.addEventListener('submit', async function(event) {
+// Empêchement du rechargement de la page au clic//
+    event.preventDefault();  
+//Récupération des valeurs contenues dans les champs de saisie email & mot de passe pour pouvoir envoyer la requête au serveur//
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    console.log(email)
+    console.log(password)
+//Création d'un objet Javascript loginData pour envoyer la requête au serveur//
+    const loginData = {
+        email: email,
+        password: password
+    };
+// Envoi des données au serveur via une requête POST//
+        const response = await fetch('http://localhost:5678/api/users/login', {
+            method: 'POST',
             headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json',
+                'Accept' : 'application/json'
             },
-            body: JSON.stringify(data)
-        })
-            .then(function (response) {
-                if (response.ok) {
-                    return response.json();
-                } else if (response.status === 401) {
-                    throw new Error("Adresse mail ou mot de passe invalide");
-                } else {
-                    throw new Error("Erreur lors de la connexion");
-                }
-            })
-            .then(function (responseData) {
-                var token = responseData.token;
-                localStorage.setItem("token", token);
-   
-                window.location.href = "index.html";
-            })
-            .catch(function (error) {
-                showValidationError(passwordInput, false, error.message);
-                passwordInput.value = '';
-            });
-    }
+            body: JSON.stringify(loginData)
+        });
+// Gestion de la réponse du serveur//
+        if (response.ok) {
+            const data = await response.json();
+// Stockage du token dans le localStorage pour une utilisation future//
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userId', data.userId);
+// Redirection vers la page principale//
+            window.location.href = 'index.html';
+        } else {
+//Si la réponse n'est pas "ok", affichage du message d'erreur//
+            errorMessage.innerText = 'Erreur dans l\'identifiant ou le mot de passe';
+            errorMessage.style.color = 'red';
+        }
+// Réinitialisation des champs du formulaire
+    emailInput.value = '';
+    passwordInput.value = '';
+});

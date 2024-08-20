@@ -9,15 +9,20 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+	<div class="header-black">
+        <i class="fa-regular fa-pen-to-square"></i>
+        <p>Mode édition</p>
+    </div>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
 			<li>projets</li>
 			<li>contact</li>
-			<li>login</li>
+			<li id="login-li"><a href="./login.html" target="_blank">login</a></li>
 			<li><img class="IG_icon" src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -35,7 +40,32 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<div class="title-portfolio-edit">
+            <h2>Mes Projets</h2>
+            <div class="portfolio-edit">
+                <i class="fa-regular fa-pen-to-square"></i>
+                <a href="#modal" class="modal-link">modifier</a>
+            </div>
+        </div>
+		<aside id="modal" class="modal" style="display: none">
+            <div class="modal-wrapper js-modal-stop">
+				<button><i class="fa-solid fa-arrow-left"></i></button>
+                <button class="js-modal-close">x</button>
+				<h3 class="modal-title">Galerie photo</h3>
+				<div class="gallery-modal-container"></div>
+				<div class="add-photo-rectangle">
+					<i class="fa-regular fa-image"></i>
+					<button class="choose-photo-button">+ Ajouter photo</button>
+					<p class="info-upload">jpg, png: 4mo max</p>
+					<label for="title-new-photo">Titre</label>
+					<input type="text" id="TitleNewPhoto" name="TitleNewPhoto">
+					<label for="categories">Catégorie</label>
+					<select id="categoriesNewPhoto"></select>
+				</div>
+				<hr>
+				<button class="button-add-photo">Ajouter une photo</button>
+            </div>
+        </aside>
 		<div class="filters">
 		</div>
 		<div class="gallery">
@@ -63,5 +93,6 @@
 	</nav>
 </footer>
 <script src="index.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
