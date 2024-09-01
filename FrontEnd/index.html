@@ -47,25 +47,6 @@
                 <a href="#modal" class="modal-link">modifier</a>
             </div>
         </div>
-		<aside id="modal" class="modal" style="display: none">
-            <div class="modal-wrapper js-modal-stop">
-				<button><i class="fa-solid fa-arrow-left"></i></button>
-                <button class="js-modal-close">x</button>
-				<h3 class="modal-title">Galerie photo</h3>
-				<div class="gallery-modal-container"></div>
-				<div class="add-photo-rectangle">
-					<i class="fa-regular fa-image"></i>
-					<button class="choose-photo-button">+ Ajouter photo</button>
-					<p class="info-upload">jpg, png: 4mo max</p>
-					<label for="title-new-photo">Titre</label>
-					<input type="text" id="TitleNewPhoto" name="TitleNewPhoto">
-					<label for="categories">Catégorie</label>
-					<select id="categoriesNewPhoto"></select>
-				</div>
-				<hr>
-				<button class="button-add-photo">Ajouter une photo</button>
-            </div>
-        </aside>
 		<div class="filters">
 		</div>
 		<div class="gallery">
@@ -92,7 +73,36 @@
 		</ul>
 	</nav>
 </footer>
+<aside id="modal" class="modal" style="display: none">
+	<div class="modal-wrapper js-modal-stop js-modal-list">
+		<button class="js-modal-close">x</button>
+		<h3 class="modal-title">Galerie photo</h3>
+		<div class="gallery-modal-container"></div>
+		<hr>
+		<button class="button-add-photo">Ajouter une photo</button>
+	</div>
+	<div class="modal-wrapper js-modal-stop js-modal-add" style="display: none">
+		<i class="fa-solid fa-arrow-left"></i>
+		<button class="js-modal-close">x</button>
+		<h3 class="modal-title">Ajout photo</h3>
+		<div class="add-photo-rectangle">
+			<i class="fa-regular fa-image"></i>
+			<input type="file" id="choose-photo-button" accept="image/*" style="display: none;">
+			<label for="choose-photo-button" class="choose-photo-button">+ Ajouter photo</label>
+			<p class="info-upload">jpg, png: 4mo max</p>
+		</div>
+		<div id="photo-preview-container">
+		</div>
+			<form class="form-add-photo">
+			<label for="title-new-photo">Titre</label>
+			<input type="text" id="TitleNewPhoto" name="TitleNewPhoto">
+			<label for="categories">Catégorie</label>
+			<select id="categoriesNewPhoto"></select>
+			</form>
+			<hr>
+			<button class="button-valider">Valider</button>
+	</div>
+</aside>
 <script src="index.js"></script>
-<script src="app.js"></script>
 </body>
 </html>

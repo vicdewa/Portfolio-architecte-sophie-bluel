@@ -183,7 +183,6 @@ li:hover {
     position: fixed;
     top:0;
     left:0;
-    height: 100%;
     width: 100%;
     background: rgba(0, 0, 0, 0.4);
     display: flex;
@@ -203,7 +202,6 @@ li:hover {
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-content: center;
 	align-items: center;
 }
@@ -232,7 +230,7 @@ button{
 .modal-title{
 	font-size: 26px;
 	text-align: center;
-	margin-top: 80px;
+	padding-top: 80px;
 	margin-bottom: 80px;
 }
 hr{
@@ -253,7 +251,7 @@ hr{
 	margin: auto;
 	padding: 10px;
 	margin-top: 0px;
-	margin-bottom: 10px;
+	margin-bottom: 60px;
 	font-size: 10px;
 }
 .choose-photo-button{
@@ -265,10 +263,10 @@ hr{
 	padding: 15px;
 	margin-top: 0px;
 	margin-bottom: 10px;
-	display: flex;
-	justify-content: center;
+	text-align: center;
 	align-content: center;
-	align-items: center;
+	justify-content: center;
+	display: flex;
 	font-size: 14px;
 	color: #306685;
 }
@@ -319,6 +317,22 @@ hr{
 	margin-bottom: 50px;
 	width: 35%;
 }
+.button-valider{
+	color: white;
+	background-color: #A7A7A7;
+	border-radius: 60px;
+	padding: 10px;
+	margin: 20px;
+	border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	margin-bottom: 50px;
+	width: 35%;
+}
 .add-photo-rectangle{
 	background-color: #E8F1F6;
 	height: 220px;
@@ -326,6 +340,35 @@ hr{
 	border-radius: 3px;
 	display: flex;
 	flex-direction: column;
+	justify-items: center;
+	margin-bottom: 30px;
+}
+#TitleNewPhoto{
+	box-shadow: 0px 4px 14px 0px #00000017;
+	border: none;
+	width: 420px;
+	height: 51px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding-left: 10px;
+}
+#categoriesNewPhoto{
+	box-shadow: 0px 4px 14px 0px #00000017;
+	border: none;
+	background-color: #FFFFFF;
+	width: 420px;
+	height: 51px;
+	margin-top: 20px;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-right: 8px solid transparent;
+}
+.form-add-photo{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
 }
 .gallery {
 	width: 100%;
