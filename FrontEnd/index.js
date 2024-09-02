@@ -234,7 +234,7 @@ async function fetchAndDisplayCategories() {
         
 
 //Habilitation du bouton submit du formulaire // 
-const uploadFile = document.getElementById('choose-photo-button');
+const fileInputForm = document.getElementById('choose-photo-button');
 const textInputForm = document.getElementById('TitleNewPhoto');
 const selectInputForm = document.getElementById('categoriesNewPhoto');
 const submitButton = document.querySelector('.button-valider');
@@ -250,22 +250,35 @@ const isFileUploaded = fileInputForm.files.length > 0;
 if (isTextFilled && isSelectChosen && isFileUploaded) {
 submitButton.disabled = false;   // Activation du bouton //
 submitButton.style.backgroundColor = '#1D6154'; // Passer au vert //
+console.log('Tous les champs ont été remplis : le bouton submit est activé.');
     } else {
 submitButton.disabled = true;    // Désactiver le bouton//
 submitButton.style.backgroundColor = '#A7A7A7'; // Couleur grise lorsque désactivé//
+console.log('Champs manquants : le bouton est désactivé.');
     }
 }
 // Ajout des event listeners pour vérifier les changements sur chacun des champs//
-textInputForm.addEventListener('input', checkInputs);
-console(log)='titre renseigne'
-selectInputForm.addEventListener('change', checkInputs);
-console(log)='categorie selectionnee'
-uploadFile.addEventListener('change', checkInputs);
-console(log)='fichier ajoute'
+textInputForm.addEventListener('input', () =>{
+    console.log('Titre renseigné.');
+    checkInputs();
+})
+selectInputForm.addEventListener('change', () =>{
+    console.log('Catégorie renseignée.');
+    checkInputs();
+})
+uploadFile.addEventListener('change', () =>{
+    console.log('Fichier ajouté.');
+    checkInputs();
+})
 
 
 // Gestion de l'affichage de la 'page 3' de la modale une fois clic sur 'Valider'//
 //Il faut faire en sorte que cette classe soit en display none (add-photo-rectangle) et qu'un input de type file soit visible avec la miniature de la photo. Utiliser un event listener quand il y a un changement dans le champ de ajouter la photo.
+
+
+
+
+
 
 //Ajout de la photo à la galerie (POST)//
 
