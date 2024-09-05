@@ -164,8 +164,7 @@ fetch(`http://localhost:5678/api/works/${work.id}`, {
         })
 .then(response => {
         if (response.ok) {
-// Suppression du DOM correspondant à la photo une fois la requête réussie sans rechargement de la page//
-//prevent default//
+// Suppression du DOM correspondant à la photo une fois la requête réussie pour éviter le rechargement de la page//
 imageContainer.remove();
 console.log('Image supprimée avec succès.');
 } 
@@ -238,7 +237,8 @@ const fileInputForm = document.getElementById('choose-photo-button');
 const textInputForm = document.getElementById('TitleNewPhoto');
 const selectInputForm = document.getElementById('categoriesNewPhoto');
 const submitButton = document.querySelector('.button-valider');
-// Vérifier du remplissage des deux champs//
+const errorMessageForm = getElementById('error-message-form');
+// Vérification du remplissage des trois champs//
 function checkInputs() {
 // Vérifier si le texte est rempli//
 const isTextFilled = textInputForm.value.trim() !== ''; 
@@ -252,8 +252,10 @@ submitButton.disabled = false;   // Activation du bouton //
 submitButton.style.backgroundColor = '#1D6154'; // Passer au vert //
 console.log('Tous les champs ont été remplis : le bouton submit est activé.');
     } else {
-submitButton.disabled = true;    // Désactiver le bouton//
+submitButton.disabled = true;    // Désactivation du bouton//
 submitButton.style.backgroundColor = '#A7A7A7'; // Couleur grise lorsque désactivé//
+errorMessageForm.innerText = 'Merci de remplir tous les champs'; // Affichage du message d'erreur //
+errorMessageForm.style.color = 'red'; 
 console.log('Champs manquants : le bouton est désactivé.');
     }
 }
@@ -266,20 +268,72 @@ selectInputForm.addEventListener('change', () =>{
     console.log('Catégorie renseignée.');
     checkInputs();
 })
-uploadFile.addEventListener('change', () =>{
+fileInputForm.addEventListener('change', () =>{
     console.log('Fichier ajouté.');
     checkInputs();
 })
 
+// Gestion de la preview ('page 3' de la modale)//
+const photoPreviewContainer = document.getElementById('photo-preview-container');
+const uploadRectangle = document.querySelector('.add-photo-rectangle');
+console.log('photoPreviewContainer:', photoPreviewContainer);
+console.log('uploadRectangle:', uploadRectangle);
+// Fonction pour afficher une preview du fichier ajouté //
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        console.log('Fichier sélectionné :', file); 
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            console.log('Chargement de l\'image terminé');
+        // Suppression de l'ancienne image si elle existe//
+            photoPreviewContainer.innerHTML = '';
+            uploadRectangle.style.display = 'none';
+            console.log('Rectangle de téléchargement caché');
+        // Création d'un élément <img> pour afficher la preview du fichier//
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = 'Aperçu de l\'image';
+            img.style.height = '220px'; 
+            img.style.objectFit = 'cover'; 
+            photoPreviewContainer.appendChild(img);
+            console.log('Image ajoutée au conteneur');
+        // Marquage du fichier comme correctement ajouté//
+                    checkInputs();
+                };
+        // Lecture du fichier et affichage d'un aperçu//
+                reader.readAsDataURL(file); 
+            }
+        }
 
-// Gestion de l'affichage de la 'page 3' de la modale une fois clic sur 'Valider'//
-//Il faut faire en sorte que cette classe soit en display none (add-photo-rectangle) et qu'un input de type file soit visible avec la miniature de la photo. Utiliser un event listener quand il y a un changement dans le champ de ajouter la photo.
-
-
-
-
-
-
-//Ajout de la photo à la galerie (POST)//
-
-//Suppression de photos dans la galerie (DELETE)//
+// Requête POST pour envoyer la photo au serveur et l'ajouter à la galerie après clic sur valider et rechargement de la modale//
+submitButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    alert(authToken);
+    fetch('http://localhost:5678/api/works', {
+        method: 'POST',
+        headers: {
+        'Authorization': `Bearer ${authToken}` 
+    },
+    body: formData
+})
+.then(response => {
+    if (response.ok) {
+        return response.json(); 
+    } else {
+        throw new Error('Erreur lors de l\'ajout de l\'image.');
+    }
+})
+.then(data => {
+    console.log('Image ajoutée avec succès:', data);
+// Fermeture de la modale après l'ajout//
+document.querySelector('.js-modal-add').style.display = 'none';
+// Actualisation de la galerie des images dans la 'page 1' de la modale//
+fetchAndDisplayGallery(); 
+})
+.catch(error => {
+    console.error('Erreur lors de la requête POST:', error);
+    errorMessageForm.innerText = 'Une erreur est survenue lors de l\'ajout de la photo';
+    errorMessageForm.style.color = 'red';
+});
+});

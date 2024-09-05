@@ -343,6 +343,15 @@ hr{
 	justify-items: center;
 	margin-bottom: 30px;
 }
+#photo-preview-container{
+	background-color: #E8F1F6;
+	height: 220px;
+	width: 420px;
+	border-radius: 3px;
+	display: flex;
+	justify-items: center;
+	margin-bottom: 30px;
+}
 #TitleNewPhoto{
 	box-shadow: 0px 4px 14px 0px #00000017;
 	border: none;
