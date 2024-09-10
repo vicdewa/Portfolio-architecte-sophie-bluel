@@ -2,7 +2,7 @@
 
 //email: sophie.bluel@test.tld password: S0phie//
 
-//Sélection et déclaration des éléments du DOM//
+//LOG-IN, Sélection et déclaration des éléments du DOM//
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
@@ -35,6 +35,7 @@ loginForm.addEventListener('submit', async function(event) {
             const data = await response.json();
 // Stockage du token dans le localStorage pour une utilisation future//
             localStorage.setItem('token', data.token);
+            console.log(data)
             localStorage.setItem('userId', data.userId);
 // Redirection vers la page principale//
             window.location.href = 'index.html';
@@ -47,3 +48,4 @@ loginForm.addEventListener('submit', async function(event) {
     emailInput.value = '';
     passwordInput.value = '';
 });
+

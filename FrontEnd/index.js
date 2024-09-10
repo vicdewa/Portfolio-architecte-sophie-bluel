@@ -64,12 +64,25 @@ const headerBlack = document.querySelector('.header-black')
 const header = document.querySelector('header')
 const logOut = document.getElementById('login-li')
 const editButton = document.querySelector('.portfolio-edit')
+var authToken='';
 if (localStorage.getItem('token')){
+        authToken=localStorage.getItem('token');
         header.style.margin = '100px 0px 50px 0px';
         logOut.innerText = 'logout';
+        logOut.addEventListener('click', function() {
+            logout();  // Appel de la fonction de déconnexion
+        });
 }else{
      headerBlack.classList.add('displaynone')
      editButton.classList.add('displaynone') 
+}
+// Fonction LOG-OUT //
+function logout() {
+// Suppression du token et de l'ID utilisateur dans le localStorage //
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+// Redirection vers la page d'accueil après déconnexion //
+    window.location.href = 'index.html';
 }
 
 //Fonction qui gère le fonctionnement des filtres//
@@ -136,7 +149,6 @@ const modalLink = document.querySelector('.modal-link')
 
 // Sélection de l'emplacement où afficher la galerie//
 const galleryContainer = document.querySelector('.gallery-modal-container');
-const authToken= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1MTg3NDkzOSwiZXhwIjoxNjUxOTYxMzM5fQ.JGN1p8YIfR-M-5eQ-Ypy6Ima5cKA4VbfL2xMr2MgHm4';
 // Récupération des images depuis l'API et affichage dans la modale//
 fetch('http://localhost:5678/api/works')
   .then(response => response.json())
@@ -164,7 +176,7 @@ fetch(`http://localhost:5678/api/works/${work.id}`, {
         })
 .then(response => {
         if (response.ok) {
-// Suppression du DOM correspondant à la photo une fois la requête réussie pour éviter le rechargement de la page//
+// Suppression de l'image dans le DOM (galerie modale) une fois la requête réussie en empêchant le rechargement de la page //
 imageContainer.remove();
 console.log('Image supprimée avec succès.');
 } 
@@ -179,6 +191,41 @@ console.log('Image supprimée avec succès.');
   })
 .catch(error => console.error('Erreur lors de la récupération des images:', error));
 
+// Actualisation de la galerie du portfolio à la fermeture de la modale lors de la SUPPRESSION //
+// Sélection de toutes les icônes de suppression et ajout d'un event listener //
+document.querySelectorAll('.fa-trash-can').forEach(icon => {
+    icon.addEventListener('click', (event) => {
+// Remonter vers le conteneur parent qui contient `data-photo-id`//
+    const imageContainer = event.target.closest('.image-container');
+// Récupération de l'ID de la photo depuis le conteneur parent //
+    const photoId = imageContainer.getAttribute('data-photo-id');
+        if (photoId) {
+            deletePhoto(photoId); // Supprimer la photo de la modale et de la galerie
+        } else {
+            console.error('Aucun ID de photo trouvé pour cet élément');
+        }
+    });
+});
+
+function deletePhoto(photoId) {
+    // Sélection de l'élément de la modale et de la galerie
+    const photoElementInModal = document.getElementById(`modal-photo-${photoId}`);
+    const photoElementInGallery = document.getElementById(`gallery-photo-${photoId}`);
+    
+    // Supprimer l'élément de la modale
+    if (photoElementInModal) {
+        photoElementInModal.remove();
+    } else {
+        console.error('Photo dans la modale non trouvée');
+    }
+
+    // Supprimer l'élément de la galerie
+    if (photoElementInGallery) {
+        photoElementInGallery.remove();
+    } else {
+        console.error('Photo dans la galerie non trouvée');
+    }
+}
 
 //Gestion du passage à la 'page 2' de la modale une fois qu'on clique sur le bouton "Ajouter une photo"//
 let isClicked = false
@@ -237,7 +284,7 @@ const fileInputForm = document.getElementById('choose-photo-button');
 const textInputForm = document.getElementById('TitleNewPhoto');
 const selectInputForm = document.getElementById('categoriesNewPhoto');
 const submitButton = document.querySelector('.button-valider');
-const errorMessageForm = getElementById('error-message-form');
+const errorMessageForm = document.getElementById('error-message-form');
 // Vérification du remplissage des trois champs//
 function checkInputs() {
 // Vérifier si le texte est rempli//
@@ -251,6 +298,7 @@ if (isTextFilled && isSelectChosen && isFileUploaded) {
 submitButton.disabled = false;   // Activation du bouton //
 submitButton.style.backgroundColor = '#1D6154'; // Passer au vert //
 console.log('Tous les champs ont été remplis : le bouton submit est activé.');
+errorMessageForm.style.display = 'none'; //Disparition du message d'erreur//
     } else {
 submitButton.disabled = true;    // Désactivation du bouton//
 submitButton.style.backgroundColor = '#A7A7A7'; // Couleur grise lorsque désactivé//
@@ -268,9 +316,10 @@ selectInputForm.addEventListener('change', () =>{
     console.log('Catégorie renseignée.');
     checkInputs();
 })
-fileInputForm.addEventListener('change', () =>{
+fileInputForm.addEventListener('change', (event) =>{
     console.log('Fichier ajouté.');
     checkInputs();
+    previewImage(event);
 })
 
 // Gestion de la preview ('page 3' de la modale)//
@@ -292,6 +341,7 @@ function previewImage(event) {
             console.log('Rectangle de téléchargement caché');
         // Création d'un élément <img> pour afficher la preview du fichier//
             const img = document.createElement('img');
+            img.classList.add('img-preview');
             img.src = e.target.result;
             img.alt = 'Aperçu de l\'image';
             img.style.height = '220px'; 
@@ -308,32 +358,103 @@ function previewImage(event) {
 
 // Requête POST pour envoyer la photo au serveur et l'ajouter à la galerie après clic sur valider et rechargement de la modale//
 submitButton.addEventListener('click', function(event) {
+    const formData = document.getElementById('formData');
     event.preventDefault();
     alert(authToken);
     fetch('http://localhost:5678/api/works', {
-        method: 'POST',
-        headers: {
-        'Authorization': `Bearer ${authToken}` 
-    },
-    body: formData
-})
-.then(response => {
-    if (response.ok) {
-        return response.json(); 
-    } else {
-        throw new Error('Erreur lors de l\'ajout de l\'image.');
-    }
-})
-.then(data => {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: formData
+            })
+        .then(response => response.json())
+        .then(data => {
+    console.log(data)
     console.log('Image ajoutée avec succès:', data);
 // Fermeture de la modale après l'ajout//
-document.querySelector('.js-modal-add').style.display = 'none';
-// Actualisation de la galerie des images dans la 'page 1' de la modale//
-fetchAndDisplayGallery(); 
+closeModal()
 })
-.catch(error => {
-    console.error('Erreur lors de la requête POST:', error);
-    errorMessageForm.innerText = 'Une erreur est survenue lors de l\'ajout de la photo';
-    errorMessageForm.style.color = 'red';
+})
+
+
+// CODE A RELIRE POUR LA DERNIERE PARTIE //
+
+// Sélectionner toutes les icônes de suppression (trash-can) et ajouter un event listener
+document.querySelectorAll('.fa-trash-can').forEach(icon => {
+    icon.addEventListener('click', (event) => {
+        // Remonter vers le conteneur parent qui contient l'image
+        const imageContainer = event.target.closest('.image-container');
+
+        // Récupérer l'élément <img> dans le conteneur parent
+        const imageElement = imageContainer.querySelector('img');
+
+        // Extraire l'URL de l'image à partir de l'attribut src
+        const imageUrl = imageElement.getAttribute('src');
+
+        // Extraire le nom de fichier à partir de l'URL de l'image
+        const imageName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+
+        // Appeler la fonction de suppression en utilisant le nom du fichier comme identifiant unique
+        if (imageName) {
+            deletePhoto(imageName); // Suppression de la photo de la modale et de la galerie
+        } else {
+            console.error('Aucun nom d\'image trouvé pour cet élément');
+        }
+    });
 });
-});
+
+// Fonction pour supprimer la photo
+function deletePhoto(photoName) {
+    // Sélection de l'élément de la modale et de la galerie avec l'ID de la photo
+    const photoElementInModal = document.getElementById(`modal-photo-${photoName}`);
+    const photoElementInGallery = document.getElementById(`gallery-photo-${photoName}`);
+
+    // Supprimer l'élément de la modale
+    if (photoElementInModal) {
+        photoElementInModal.remove();
+    } else {
+        console.error('Photo dans la modale non trouvée');
+    }
+
+    // Supprimer l'élément de la galerie
+    if (photoElementInGallery) {
+        photoElementInGallery.remove();
+    } else {
+        console.error('Photo dans la galerie non trouvée');
+    }
+
+    // Ici on ne redirige pas tout de suite, on attend la fermeture manuelle
+}
+
+// Ajout d'un listener pour la fermeture manuelle de la modale
+const closeModalButton = document.querySelector('.close-modal'); // Remplace avec ton sélecteur
+
+if (closeModalButton) {
+    closeModalButton.addEventListener('click', () => {
+        // Fermer la modale manuellement et ensuite rediriger
+        closeModal();
+
+        // Redirection vers la page d'accueil et rechargement pour actualiser la galerie
+        window.location.href = 'index.html';
+    });
+}
+
+// Fonction pour fermer la modale
+function closeModal() {
+    const modal = document.querySelector('.modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Pour la partie ajout de photo avec fermeture automatique
+function addPhoto(newPhoto) {
+    // Logique d'ajout de la photo dans la galerie
+
+    // Fermer la modale automatiquement après l'ajout
+    closeModal();
+
+    // Redirection vers la page d'accueil après l'ajout et rechargement pour actualiser la galerie
+    window.location.href = 'index.html';
+}
