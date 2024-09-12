@@ -88,7 +88,7 @@ a{
 	padding-left: 15px;
 }
 .displaynone{
-	display: none;
+	display: none !important;
 }
 h1{
 	display: flex;
@@ -99,14 +99,12 @@ h1{
 	text-transform: uppercase;
 	color: #B1663C
 }
-
 h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
 ;
 }
-
 h2{
 	font-family: 'Syne';
 	font-weight: 700;
@@ -123,7 +121,6 @@ nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
 }
-
 li:hover {
 	font-weight: 900;
 }
@@ -143,14 +140,12 @@ li:hover {
 	margin: auto;
 	width: 80%;
 }
-
 #introduction article {
 	flex: 1;
 }
 #introduction h2 {
 	margin-bottom: 1em;
 }
-
 #introduction p {
 	margin-bottom: 0.5em;
 	color: #3D3D3D;
@@ -184,7 +179,7 @@ li:hover {
     top:0;
     left:0;
     width: 100%;
-	height: 100%;
+	max-height: 80vh;
     background: rgba(0, 0, 0, 0.4);
     display: flex;
 	align-content: center;
@@ -235,9 +230,8 @@ button{
 	margin-bottom: 80px;
 }
 hr{
-	background-color: #B3B3B3;
+	color: #B3B3B3;
 	border-style: solid;
-	height: 1px;
 	width: 420px;
 	margin: 60px;
 }
@@ -427,7 +421,7 @@ figcaption{
 	padding: 20px;
 	margin-top: 20px;
 	margin-bottom: 60px;
-	}
+}
 .filters button:hover{
 		color: white;
 		background-color: #1D6154;
@@ -442,6 +436,7 @@ figcaption{
 }
 #contact h2{
 	margin-bottom: 20px;
+	margin-top: 80px;
 }
 #contact form {
 	text-align: left;
@@ -449,9 +444,9 @@ figcaption{
 	display: flex;
 	flex-direction: column;
 }
-
 #contact input {
 	height: 50px;
+	padding-left: 10px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
@@ -461,9 +456,9 @@ figcaption{
 }
 #contact textarea {
 	border: none;
+	padding-left: 10px;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-
 input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
@@ -490,4 +485,3 @@ footer nav ul {
 	justify-content: flex-end;
 	padding: 10px;
 }
-

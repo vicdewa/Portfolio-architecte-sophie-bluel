@@ -41,7 +41,7 @@
 	</section>
 	<section id="portfolio">
 		<div class="title-portfolio-edit">
-            <h2>Mes Projets</h2>
+            <h2 id="mes-projets">Mes Projets</h2>
             <div class="portfolio-edit">
                 <i class="fa-regular fa-pen-to-square"></i>
                 <a href="#modal" class="modal-link">modifier</a>
@@ -87,21 +87,21 @@
 		<h3 class="modal-title">Ajout photo</h3>
 		<div class="add-photo-rectangle">
 			<i class="fa-regular fa-image"></i>
-			<input type="file" id="choose-photo-button" accept="image/*" style="display: none;">
+			<input type="file" name="photoForm" id="choose-photo-button" accept="image/*" style="display: none;">
 			<label for="choose-photo-button" class="choose-photo-button">+ Ajouter photo</label>
 			<p class="info-upload">jpg, png: 4mo max</p>
 		</div>
 		<div id="photo-preview-container">
 		</div>
-			<form class="form-add-photo" id="formData">
-			<label for="title-new-photo">Titre</label>
-			<input type="text" id="TitleNewPhoto" name="TitleNewPhoto">
-			<label for="categories">Catégorie</label>
-			<select id="categoriesNewPhoto"></select>
-			</form>
-			<hr>
-			<button class="button-valider">Valider</button>
-			<div id="error-message-form"></div>
+		<form class="form-add-photo" id="formData">
+		<label for="title-new-photo">Titre</label>
+		<input type="text" id="TitleNewPhoto" name="TitleNewPhoto">
+		<label for="categories">Catégorie</label>
+		<select name="categories" id="categoriesNewPhoto"></select>
+		</form>
+		<hr>
+		<button class="button-valider">Valider</button>
+		<div id="error-message-form"></div>
 	</div>
 </aside>
 <script src="index.js"></script>
